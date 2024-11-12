@@ -6,22 +6,34 @@ def parse_cte_xml(file_path):
 
     ns = {'ns': 'http://www.portalfiscal.inf.br/cte'}
  
-    data = {
-        "numero_cte": root.find('.//ns:ide/ns:nCT', namespaces=ns).text,
-        
-    }
+    data = []
+    for ide in root.findall('.//ns:ide', namespaces=ns):
+        item = {
+            "numero_cte": ide.find('./ns:nCT', namespaces=ns).text,
+            "bialog": root.find('.//ns:emit/ns:xNome', namespaces=ns).text,
+            "tomador": root.find('.//ns:rem/ns:xNome', namespaces=ns).text,
+        }
+        data.append(item)
     return data
 
 def format_conemb_line(data):
-    # Defina o layout específico para o CONEMB
-    # Exemplo: linha formatada com tamanhos específicos
-    linha = f"{data['numero_cte'].zfill(12)}"  # ajuste conforme layout
-    # Adicione outros campos ao layout
-    return linha
+    arrayDeContent = []
+    for item in data:
+        linhaInicial = f"{item['bialog'].zfill(37)}" + " " + f"{item['tomador'].zfill(11)}" + "                     " + f"{item['numero_cte'].zfill(12)}"
+    # linha = f"{data['numero_cte'].zfill(12)}"
+    # linha = f"{data['bialog'].zfill(37)}"
+    arrayDeContent.append(linhaInicial)
 
-def generate_conemb(data, output_path="CONEMB.txt"):
+    return arrayDeContent
+    
+
+def generate_conemb(data, output_path="DOCCOB.txt"):
     with open(output_path, "w") as file:
-        file.write(format_conemb_line(data) + "\n")
+        format = format_conemb_line(data)
+        linhas_formatadas = format
+        for linhaInicial in linhas_formatadas:
+            file.write(linhaInicial + "\n")
+        # file.write(format_conemb_line(data) + "\n")
 
 def main():
     xml_file = "./XML/CTE 24379.xml"
