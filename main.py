@@ -1,4 +1,6 @@
 import datetime
+from datetime import datetime
+from datetime import date
 import xml.etree.ElementTree as ET
 
 def parse_cte_xml(file_path):
@@ -31,18 +33,28 @@ def parse_cte_xml(file_path):
 def format_conemb_line(data):
     arrayDeContent = []
     for item in data:
-        data_emissao = datetime.strptime(item['dataEmissao'], "%d-%m-%Y %H:%M:%S")
+        data_emissao = datetime.strptime(item['dataEmissao'], "%Y-%m-%dT%H:%M:%S%z")
         data_formatada = data_emissao.strftime("%d%m%y %H%M%S")
         # linhaInicial = f"{item['bialog'].zfill(37)}" + " " + f"{item['tomador'].zfill(11)}" + "                     " + f"{item['numero_cte'].zfill(12)}"
-        linhaTeste = f"{item['icms'].zfill(10)}{item['valReceber'].zfill(10)}{item['valPrestServ'].zfill(10)}{item['valMercadoria'].zfill(10)}{item['peso'].zfill(10)}{item['chaveNf'].zfill(10)}{item[data_formatada].zfill(10)}{item['numCte'].zfill(10)}{item['serieCte'].zfill(10)}{item['remetente'].zfill(10)}"
+        linhaTeste = (f"{item['icms'].zfill(10)}" + "\n"
+                      f"{item['valReceber'].zfill(10)}" + "\n"
+                      f"{item['valPrestServ'].zfill(10)}" + "\n"
+                      f"{item['valMercadoria'].zfill(10)}" + "\n"
+                      f"{item['peso'].zfill(10)}" + "\n"
+                      f"{item['chaveNf'].zfill(10)}" + "\n"
+                      f"{data_formatada}" + "\n"
+                      f"{item['numCte'].zfill(10)}" + "\n"
+                      f"{item['serieCte'].zfill(10)}" + "\n"
+                      f"{item['remetente'].zfill(10)}" + "\n"
+                      )
     # linha = f"{data['numero_cte'].zfill(12)}"
     # linha = f"{data['bialog'].zfill(37)}"
     arrayDeContent.append(linhaTeste)
 
     return arrayDeContent
     
-
-def generate_conemb(data, output_path="DOCCOB.txt"):
+dataAtual = date.today()
+def generate_conemb(data, output_path=f"DOCCOB{dataAtual}.txt"):
     with open(output_path, "w") as file:
         linhas_formatadas = format_conemb_line(data)
         for linha in linhas_formatadas:
