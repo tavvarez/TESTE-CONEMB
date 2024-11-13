@@ -47,8 +47,6 @@ def format_conemb_line(data):
                       f"{item['serieCte'].zfill(10)}" + "\n"
                       f"{item['remetente'].zfill(10)}" + "\n"
                       )
-    # linha = f"{data['numero_cte'].zfill(12)}"
-    # linha = f"{data['bialog'].zfill(37)}"
     arrayDeContent.append(linhaTeste)
 
     return arrayDeContent
