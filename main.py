@@ -6,20 +6,6 @@ def parse_cte_xml(file_path):
 
     ns = {'ns': 'http://www.portalfiscal.inf.br/cte'}
  
-<<<<<<< HEAD
-    data = {
-        "numero_cte": root.find('.//ns:ide/ns:nCT', namespaces=ns).text,
-        
-    }
-    return data
-
-def format_conemb_line(data):
-    # Defina o layout específico para o CONEMB
-    # Exemplo: linha formatada com tamanhos específicos
-    linha = f"{data['numero_cte'].zfill(12)}"  # ajuste conforme layout
-    # Adicione outros campos ao layout
-    return linha
-=======
     data = []
     for ide in root.findall('.//ns:ide', namespaces=ns):
         item = {
@@ -49,13 +35,9 @@ def format_conemb_line(data):
     # linha = f"{data['numero_cte'].zfill(12)}"
     # linha = f"{data['bialog'].zfill(37)}"
     arrayDeContent.append(linhaTeste)
->>>>>>> 79ba895 (incrementando o restante dos dados do xml)
 
 def generate_conemb(data, output_path="CONEMB.txt"):
     with open(output_path, "w") as file:
-<<<<<<< HEAD
-        file.write(format_conemb_line(data) + "\n")
-=======
         format = format_conemb_line(data)
         linhas_formatadas = format
         # for linhaInicial in linhas_formatadas:
@@ -63,7 +45,6 @@ def generate_conemb(data, output_path="CONEMB.txt"):
         for linhaTeste in linhas_formatadas:
             file.write(linhaTeste + "\n")
         # file.write(format_conemb_line(data) + "\n")
->>>>>>> 79ba895 (incrementando o restante dos dados do xml)
 
 def main():
     xml_file = "./XML/CTE 24379.xml"
