@@ -1,3 +1,4 @@
+import datetime
 import xml.etree.ElementTree as ET
 
 def parse_cte_xml(file_path):
@@ -30,8 +31,10 @@ def parse_cte_xml(file_path):
 def format_conemb_line(data):
     arrayDeContent = []
     for item in data:
+        data_emissao = datetime.strptime(item['dataEmissao'], "%d-%m-%Y %H:%M:%S")
+        data_formatada = data_emissao.strftime("%d%m%y %H%M%S")
         # linhaInicial = f"{item['bialog'].zfill(37)}" + " " + f"{item['tomador'].zfill(11)}" + "                     " + f"{item['numero_cte'].zfill(12)}"
-        linhaTeste = f"{item['icms'].zfill(10)}{item['valReceber'].zfill(10)}{item['valPrestServ'].zfill(10)}{item['valMercadoria'].zfill(10)}{item['peso'].zfill(10)}{item['chaveNf'].zfill(10)}{item['dataEmissao'].zfill(10)}{item['numCte'].zfill(10)}{item['serieCte'].zfill(10)}{item['remetente'].zfill(10)}"
+        linhaTeste = f"{item['icms'].zfill(10)}{item['valReceber'].zfill(10)}{item['valPrestServ'].zfill(10)}{item['valMercadoria'].zfill(10)}{item['peso'].zfill(10)}{item['chaveNf'].zfill(10)}{item[data_formatada].zfill(10)}{item['numCte'].zfill(10)}{item['serieCte'].zfill(10)}{item['remetente'].zfill(10)}"
     # linha = f"{data['numero_cte'].zfill(12)}"
     # linha = f"{data['bialog'].zfill(37)}"
     arrayDeContent.append(linhaTeste)
@@ -41,12 +44,9 @@ def format_conemb_line(data):
 
 def generate_conemb(data, output_path="DOCCOB.txt"):
     with open(output_path, "w") as file:
-        format = format_conemb_line(data)
-        linhas_formatadas = format
-        # for linhaInicial in linhas_formatadas:
-        #     file.write(linhaInicial + "\n")
-        for linhaTeste in linhas_formatadas:
-            file.write(linhaTeste + "\n")
+        linhas_formatadas = format_conemb_line(data)
+        for linha in linhas_formatadas:
+            file.write(linha + "\n")
         # file.write(format_conemb_line(data) + "\n")
 
 def main():
