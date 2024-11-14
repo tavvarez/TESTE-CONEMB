@@ -33,7 +33,7 @@ def parse_cte_xml(file_path):
         cnpj = re.sub(r'\D', '', item["cnpjBialog"])
         filial_resultado = filial.identificar_filial(cnpj)
         item["codigo_filial"] = filial_resultado 
-        
+
     return data
 
 def format_conemb_line(data):
@@ -52,7 +52,7 @@ def format_conemb_line(data):
                       f"{data_formatada}" + "\n" + "0"
                       "351" + f"{item['cnpjBialog'].zfill(14)}"
                       f"{item['bialog'].zfill(34)}" + "\n" +
-                      "352" + f"{item['codigo_filial']}" + "\n" +
+                      "352" + f"{item['codigo_filial']}" + "\n"
                       f"{item['icms'].zfill(10)}" + "\n"
                       f"{item['valReceber'].zfill(10)}" + "\n"
                       f"{item['valPrestServ'].zfill(10)}" + "\n"
@@ -74,14 +74,12 @@ def generate_conemb(data, output_path=f"DOCCOB{dataAtual}.txt"):
         linhas_formatadas = format_conemb_line(data)
         for linha in linhas_formatadas:
             file.write(linha + "\n")
-        # file.write(format_conemb_line(data) + "\n")
 
 def main():
     xml_file = "./XML/CTE 24379.xml"
     data = parse_cte_xml(xml_file)
     generate_conemb(data)
     print(f"Gerado o EDI em {dataAtual}")
-    # Repita para DOCCOB 5.0 com formatação específica
 
 if __name__ == "__main__":
     main()
