@@ -66,14 +66,10 @@ def format_conemb_line(data):
                       )
     arrayDeContent.append(linhaTeste)
 
-<<<<<<< HEAD
-def generate_conemb(data, output_path="CONEMB.txt"):
-=======
     return arrayDeContent
     
 dataAtual = date.today()
 def generate_conemb(data, output_path=f"DOCCOB{dataAtual}.txt"):
->>>>>>> c460e13cbd89b2fd816f659c1fd91264f9ee4924
     with open(output_path, "w") as file:
         linhas_formatadas = format_conemb_line(data)
         for linha in linhas_formatadas:
