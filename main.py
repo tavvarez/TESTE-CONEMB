@@ -1,4 +1,9 @@
+import datetime
+from datetime import datetime
+from datetime import date
+from src.services import identificar_filial 
 import xml.etree.ElementTree as ET
+import re
 
 def parse_cte_xml(file_path):
     tree = ET.parse(file_path)
@@ -25,31 +30,61 @@ def parse_cte_xml(file_path):
             "remetente": root.find('.//ns:rem/ns:CNPJ', namespaces=ns).text,
         }
         data.append(item)
+        cnpj = re.sub(r'\D', '', item["cnpjBialog"])
+        filial = identificar_filial(cnpj)
+        print(filial)
     return data
+
 
 def format_conemb_line(data):
     arrayDeContent = []
     for item in data:
-        # linhaInicial = f"{item['bialog'].zfill(37)}" + " " + f"{item['tomador'].zfill(11)}" + "                     " + f"{item['numero_cte'].zfill(12)}"
-        linhaTeste = f"{item['icms'].zfill(10)}{item['valReceber'].zfill(10)}{item['valPrestServ'].zfill(10)}{item['valMercadoria'].zfill(10)}{item['peso'].zfill(10)}{item['chaveNf'].zfill(10)}{item['dataEmissao'].zfill(10)}{item['numCte'].zfill(10)}{item['serieCte'].zfill(10)}{item['remetente'].zfill(10)}"
-    # linha = f"{data['numero_cte'].zfill(12)}"
-    # linha = f"{data['bialog'].zfill(37)}"
+        data_emissao = datetime.strptime(item['dataEmissao'], "%Y-%m-%dT%H:%M:%S%z")
+        data_formatada = data_emissao.strftime("%d%m%y%H%M")
+        linhaTeste = (
+                      f"{item['bialog'].zfill(37)}"
+                      f"{item['tomador'].zfill(11)}" + "                     " +
+                      f"{data_formatada}"
+                      + "COB" +
+                      f"{data_formatada}" + "9" + "\n"
+                      f"{data_formatada}"
+                      + f"COBRA" +
+                      f"{data_formatada}" + "\n" + "0"
+                      "351" + f"{item['cnpjBialog'].zfill(14)}"
+                      f"{item['bialog'].zfill(34)}" + "\n" +
+                      "352"
+                      f"{item['icms'].zfill(10)}" + "\n"
+                      f"{item['valReceber'].zfill(10)}" + "\n"
+                      f"{item['valPrestServ'].zfill(10)}" + "\n"
+                      f"{item['valMercadoria'].zfill(10)}" + "\n"
+                      f"{item['peso'].zfill(10)}" + "\n"
+                      f"{item['chaveNf'].zfill(10)}" + "\n"
+                      f"{data_formatada}" + "\n"
+                      f"{item['numCte'].zfill(10)}" + "\n"
+                      f"{item['serieCte'].zfill(10)}" + "\n"
+                      f"{item['remetente'].zfill(10)}" + "\n"
+                      )
     arrayDeContent.append(linhaTeste)
 
+<<<<<<< HEAD
 def generate_conemb(data, output_path="CONEMB.txt"):
+=======
+    return arrayDeContent
+    
+dataAtual = date.today()
+def generate_conemb(data, output_path=f"DOCCOB{dataAtual}.txt"):
+>>>>>>> c460e13cbd89b2fd816f659c1fd91264f9ee4924
     with open(output_path, "w") as file:
-        format = format_conemb_line(data)
-        linhas_formatadas = format
-        # for linhaInicial in linhas_formatadas:
-        #     file.write(linhaInicial + "\n")
-        for linhaTeste in linhas_formatadas:
-            file.write(linhaTeste + "\n")
+        linhas_formatadas = format_conemb_line(data)
+        for linha in linhas_formatadas:
+            file.write(linha + "\n")
         # file.write(format_conemb_line(data) + "\n")
 
 def main():
     xml_file = "./XML/CTE 24379.xml"
     data = parse_cte_xml(xml_file)
     generate_conemb(data)
+    print(f"Gerado o EDI em {dataAtual}")
     # Repita para DOCCOB 5.0 com formatação específica
 
 if __name__ == "__main__":
