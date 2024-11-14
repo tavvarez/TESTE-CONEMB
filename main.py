@@ -1,7 +1,7 @@
 import datetime
 from datetime import datetime
 from datetime import date
-from src.services import identificar_filial 
+from src.services import filial 
 import xml.etree.ElementTree as ET
 import re
 
@@ -31,10 +31,10 @@ def parse_cte_xml(file_path):
         }
         data.append(item)
         cnpj = re.sub(r'\D', '', item["cnpjBialog"])
-        filial = identificar_filial(cnpj)
-        print(filial)
+        filial_resultado = filial.identificar_filial(cnpj)
+        item["codigo_filial"] = filial_resultado 
+        
     return data
-
 
 def format_conemb_line(data):
     arrayDeContent = []
@@ -52,7 +52,7 @@ def format_conemb_line(data):
                       f"{data_formatada}" + "\n" + "0"
                       "351" + f"{item['cnpjBialog'].zfill(14)}"
                       f"{item['bialog'].zfill(34)}" + "\n" +
-                      "352"
+                      "352" + f"{item['codigo_filial']}" + "\n" +
                       f"{item['icms'].zfill(10)}" + "\n"
                       f"{item['valReceber'].zfill(10)}" + "\n"
                       f"{item['valPrestServ'].zfill(10)}" + "\n"
