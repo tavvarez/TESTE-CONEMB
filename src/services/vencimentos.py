@@ -2,9 +2,10 @@ from datetime import datetime, timedelta
 import re
 
 vencimentos = {
-    "16404287063580": 60,
-    "35285109000288": 35,
-    "35285109000369": 15
+    "16404287063580": 60, # Suzano
+    "11174306000180": 3, # Sisa
+    "02116946000143": 35, # JFM
+    "89724447001601": 60 # Bettanin 
 }
 
 # Função para calcular a data de vencimento com base no CNPJ e data de emissão
